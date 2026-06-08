@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Agent Platform — Frontend
 
-## Getting Started
+Next.js (App Router) UI for the AI Agent Platform: auth, streaming chat with live
+tool indicators, and document management. Talks to the FastAPI backend (separate
+repo).
 
-First, run the development server:
+Built with **Next.js 16 + TypeScript + Tailwind CSS + shadcn/ui**.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Structure
+
+```
+app/
+  layout.tsx         Root layout + AuthProvider
+  page.tsx           Redirects to /chat or /login
+  login/ signup/     Auth pages
+  chat/              Streaming chat UI (sidebar, messages, tool indicators)
+  documents/         Upload / list / delete documents
+components/
+  auth-form.tsx      Shared login/signup form
+  app-header.tsx     Nav + logout
+  ui/                shadcn/ui components
+lib/
+  api.ts             fetch wrapper (JWT, error normalization)
+  sse.ts             SSE stream parser (pure parseSSEBuffer + streamChat)
+  auth.tsx           Auth context (token in localStorage)
+  use-require-auth.ts  Route guard hook
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Prerequisites
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Node.js 18+
+- The backend running at `http://localhost:8000` (see the backend repo)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Setup
 
-## Learn More
+```bash
+npm install
+copy .env.example .env.local      # default: NEXT_PUBLIC_API_URL=http://localhost:8000
+npm run dev                       # http://localhost:3000
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Usage
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Open http://localhost:3000 and sign up.
+2. **Documents** → upload a `.txt`/`.md`/`.pdf`.
+3. **Chat** → ask a question answerable from that document; watch the
+   "Searching your documents" indicator and a streamed, grounded answer. Try a
+   math question (calculator) and a current-events question (web search, if
+   Tavily is configured on the backend).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Notes
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- The JWT is stored in `localStorage` for v1. For production, prefer an httpOnly cookie.
+- `NEXT_PUBLIC_API_URL` is the only required env var; it's not a secret, but
+  `.env.local` is gitignored by convention.
