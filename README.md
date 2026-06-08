@@ -1,4 +1,6 @@
-# AI Agent Platform — Frontend
+# Cognos — Frontend
+
+> Chat with a tool-using AI agent over your own documents — streaming, with memory.
 
 Next.js (App Router) UI for the AI Agent Platform: auth, streaming chat with live
 tool indicators, and document management. Talks to the FastAPI backend (separate
