@@ -21,6 +21,10 @@ interface Props {
   mode: "login" | "signup";
 }
 
+// Public demo account — kept in sync with backend/app/seed.py
+const DEMO_EMAIL = "demo@cognos.ai";
+const DEMO_PASSWORD = "demo12345";
+
 export function AuthForm({ mode }: Props) {
   const { login, signup } = useAuth();
   const router = useRouter();
@@ -61,6 +65,29 @@ export function AuthForm({ mode }: Props) {
         </CardHeader>
         <form onSubmit={onSubmit}>
           <CardContent className="space-y-4">
+            {isLogin && (
+              <div className="rounded-md border border-dashed bg-muted/50 p-3 text-sm">
+                <p className="font-medium text-foreground">Demo account</p>
+                <p className="text-muted-foreground">
+                  Email: <span className="font-mono">{DEMO_EMAIL}</span>
+                </p>
+                <p className="text-muted-foreground">
+                  Password: <span className="font-mono">{DEMO_PASSWORD}</span>
+                </p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="mt-2 w-full"
+                  onClick={() => {
+                    setEmail(DEMO_EMAIL);
+                    setPassword(DEMO_PASSWORD);
+                  }}
+                >
+                  Use demo credentials
+                </Button>
+              </div>
+            )}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
